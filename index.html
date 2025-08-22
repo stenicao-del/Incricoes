@@ -251,9 +251,12 @@
         const carroInput = document.getElementById('carro');
 
         async function loadAllAvailableIds() {
+            idSelect.innerHTML = '<option value="">Carregando Códigos...</option>';
             try {
-                idSelect.innerHTML = '<option value="">Carregando Códigos...</option>';
                 const response = await fetch(`${googleScriptURL}?action=getAvailableIds`);
+                if (!response.ok) {
+                    throw new Error('Falha na resposta da rede.');
+                }
                 allAvailableIds = await response.json();
                 idSelect.disabled = false;
                 populateIdSelect();
