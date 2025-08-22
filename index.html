@@ -4,25 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inscrição de Competidor - Capivara Clube</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Container para a imagem de fundo, que fica por trás do conteúdo */
-        .background-image-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://i.imgur.com/vm53hS3.jpeg'); /* Cole o seu link do Imgur aqui */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            z-index: -1; /* Manda esta camada para trás de todo o conteúdo */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --border-color: #ccc;
+            --background-form: rgba(255, 255, 255, 0.95);
+            --focus-color: #80bdff;
         }
 
-        /* Estilização para o body e o formulário */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -30,151 +26,234 @@
             margin: 0;
             padding: 20px;
             box-sizing: border-box;
-            background-color: transparent; /* Removemos o fundo do body para a imagem de fundo aparecer */
+            background-color: transparent;
         }
-        .container {
-            background-color: rgba(255, 255, 255, 0.9); /* Fundo branco e semi-transparente para o formulário */
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
+        .background-image-container {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 500px;
+            height: 100%;
+            background-image: url('https://i.imgur.com/vm53hS3.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            z-index: -1;
         }
-        h1 {
-            color: #333;
+
+        .form-container {
+            background-color: var(--background-form);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .form-header {
             text-align: center;
             margin-bottom: 20px;
         }
+        
+        .form-header img {
+            max-width: 120px;
+            margin-bottom: 10px;
+        }
+        
+        .form-header h1 {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .form-header p {
+            font-size: 0.8rem;
+            color: var(--text-color);
+            margin: 5px 0 0;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        @media (min-width: 600px) {
+            .form-container {
+                padding: 40px;
+            }
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         .form-group {
-            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
         }
+        
         label {
-            display: block;
+            font-size: 0.8rem;
+            color: var(--text-color);
             margin-bottom: 5px;
-            color: #555;
-            font-weight: bold;
+            font-weight: 600;
         }
-        input[type="text"], input[type="tel"], select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        button {
+        
+        input[type="text"], 
+        input[type="tel"], 
+        select {
             width: 100%;
             padding: 12px;
-            background-color: #007bff;
-            color: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        input[type="text"]:focus, 
+        input[type="tel"]:focus, 
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--focus-color);
+        }
+
+        input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+        
+        button[type="submit"] {
+            grid-column: 1 / -1;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
-        button:hover {
+        
+        button[type="submit"]:hover {
             background-color: #0056b3;
         }
+
         .status-message {
+            grid-column: 1 / -1;
             margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 8px;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
             display: none;
         }
+        
         .status-success {
             background-color: #d4edda;
             color: #155724;
             border: 1px solid #c3e6cb;
         }
+        
         .status-error {
             background-color: #f8d7da;
             color: #721c24;
             border: 1px solid #f5c6cb;
-        }
-        .logo-container {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .logo-container img {
-            max-width: 150px;
         }
     </style>
 </head>
 <body>
 
     <div class="background-image-container"></div>
-
-    <div class="container">
-        <div class="logo-container">
-            <img src="https://via.placeholder.com/150x50?text=Seu+Logo" alt="Logo">
-        </div>
-        <h1>Inscrição de Competidor</h1>
-        <form id="registration-form">
-            <div class="form-group">
-                <label for="nome">Nome do Competidor</label>
-                <input type="text" id="nome" name="nome" required>
+    <main class="form-container">
+        <header class="form-header">
+            <img src="https://drive.google.com/uc?export=view&id=144OFIHCI_mdIILvZ1rXZKpiunhHmVOjm" alt="Capivara Clube Logo">
+            <h1>Inscrição de Competidor</h1>
+            <p>Preencha os dados abaixo para registrar sua participação no evento.</p>
+        </header>
+        
+        <form id="registration-form" data-script-url="https://script.google.com/macros/s/AKfycbw75o325mV-R3YQJuBMWB20LjeFoQ_VH5bQ6nPK_i4yY77KV_JF7zAvpGFFUoG9SZo/exec">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="">Selecione a Categoria</option>
+                        <option value="Aspirado">Aspirado</option>
+                        <option value="Turbo">Turbo</option>
+                        <option value="Iniciantes">Iniciantes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="id">Identificação (QR Code)</label>
+                    <select id="id" name="id" required>
+                        <option value="">Selecione a Categoria Primeiro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nome">Nome do Competidor</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="carro">Carro</label>
+                    <input type="text" id="carro" name="carro" required>
+                </div>
+                <div class="form-group">
+                    <label for="rg">RG</label>
+                    <input type="text" id="rg" name="rg" required maxlength="12" placeholder="Ex: 12.345.678-9">
+                </div>
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" name="cpf" required maxlength="14" placeholder="Ex: 123.456.789-00">
+                </div>
+                <div class="form-group">
+                    <label for="telefone">Telefone (WhatsApp)</label>
+                    <input type="tel" id="telefone" name="telefone" required maxlength="15" placeholder="Ex: (99) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label for="endereco">Endereço</label>
+                    <input type="text" id="endereco" name="endereco" required>
+                </div>
+                <div class="form-group">
+                    <label for="cidade">Cidade</label>
+                    <input type="text" id="cidade" name="cidade" required>
+                </div>
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <input type="text" id="estado" name="estado" required>
+                </div>
+                <button type="submit">Cadastrar</button>
+                <div id="status-message" class="status-message"></div>
             </div>
-            <div class="form-group">
-                <label for="rg">RG</label>
-                <input type="text" id="rg" name="rg" required>
-            </div>
-            <div class="form-group">
-                <label for="cpf">CPF</label>
-                <input type="text" id="cpf" name="cpf" required>
-            </div>
-            <div class="form-group">
-                <label for="endereco">Endereço</label>
-                <input type="text" id="endereco" name="endereco" required>
-            </div>
-            <div class="form-group">
-                <label for="cidade">Cidade</label>
-                <input type="text" id="cidade" name="cidade" required>
-            </div>
-            <div class="form-group">
-                <label for="estado">Estado</label>
-                <input type="text" id="estado" name="estado" required>
-            </div>
-            <div class="form-group">
-                <label for="telefone">Telefone (WhatsApp)</label>
-                <input type="tel" id="telefone" name="telefone" required>
-            </div>
-            <div class="form-group">
-                <label for="categoria">Categoria</label>
-                <select id="categoria" name="categoria" required>
-                    <option value="">Selecione a Categoria</option>
-                    <option value="Aspirado">Aspirado</option>
-                    <option value="Turbo">Turbo</option>
-                    <option value="Iniciantes">Iniciantes</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="id">Identificação (QR Code)</label>
-                <select id="id" name="id" required>
-                    <option value="">Selecione a Categoria Primeiro</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="carro">Carro</label>
-                <input type="text" id="carro" name="carro" required>
-            </div>
-            <button type="submit">Cadastrar</button>
         </form>
-        <div id="status-message" class="status-message"></div>
-    </div>
+    </main>
 
     <script>
-        // <<<<<<<<<<< SUBSTITUA ESSA URL PELA DO SEU GOOGLE APPS SCRIPT >>>>>>>>>>>>>
-        const googleScriptURL = "https://script.google.com/macros/s/AKfycbzcahO1fxsYOJsnznUs98co4OQByHxnmLkVET1F2_pUuXqf7XThRmgBXbkt9I-7NcM/exec";
-
+        const form = document.getElementById('registration-form');
+        const googleScriptURL = form.getAttribute('data-script-url');
         const categoriaSelect = document.getElementById('categoria');
         const idSelect = document.getElementById('id');
         let allAvailableIds = [];
 
+        // Adicionando os inputs que serão preenchidos
+        const nomeInput = document.getElementById('nome');
+        const rgInput = document.getElementById('rg');
+        const cpfInput = document.getElementById('cpf');
+        const enderecoInput = document.getElementById('endereco');
+        const cidadeInput = document.getElementById('cidade');
+        const estadoInput = document.getElementById('estado');
+        const telefoneInput = document.getElementById('telefone');
+        const carroInput = document.getElementById('carro');
+
         async function loadAllAvailableIds() {
             try {
-                const response = await fetch(googleScriptURL + '?action=getAvailableIds');
+                const response = await fetch(`${googleScriptURL}?action=getAvailableIds`);
                 allAvailableIds = await response.json();
                 populateIdSelect();
             } catch (error) {
@@ -193,30 +272,104 @@
             const prefix = categoriaPrefixes[categoria];
 
             idSelect.innerHTML = '<option value="">Selecione um Código</option>';
-            if (prefix) {
-                const filteredIds = allAvailableIds.filter(id => id.startsWith(prefix));
+            resetFormFields();
+
+            if (categoria) {
+                const filteredIds = allAvailableIds.filter(id => id.toLowerCase().startsWith(prefix.toLowerCase()));
                 if (filteredIds.length > 0) {
                     filteredIds.forEach(id => {
                         const option = document.createElement('option');
                         option.value = id;
-                        option.textContent = id;
+                        option.textContent = id.toUpperCase();
                         idSelect.appendChild(option);
                     });
                 } else {
                     idSelect.innerHTML = '<option value="">Nenhum Código Disponível</option>';
                 }
+            } else {
+                idSelect.innerHTML = '<option value="">Selecione a Categoria Primeiro</option>';
             }
         }
 
+        async function fetchAndPopulateCompetitorData(id) {
+            if (!id) {
+                resetFormFields();
+                return;
+            }
+            try {
+                const response = await fetch(`${googleScriptURL}?action=getCompetitorData&id=${id}`);
+                const data = await response.json();
+
+                if (data.status === "error") {
+                    console.error('Erro ao buscar dados do competidor:', data.message);
+                    resetFormFields();
+                    return;
+                }
+                
+                nomeInput.value = data.nome_competidor;
+                rgInput.value = data.rg;
+                cpfInput.value = data.cpf;
+                enderecoInput.value = data.endereco;
+                cidadeInput.value = data.cidade;
+                estadoInput.value = data.estado;
+                telefoneInput.value = data.telefone_whatsapp;
+                carroInput.value = data.carro;
+                
+                nomeInput.readOnly = true;
+                rgInput.readOnly = true;
+                cpfInput.readOnly = true;
+                enderecoInput.readOnly = true;
+                cidadeInput.readOnly = true;
+                estadoInput.readOnly = true;
+                telefoneInput.readOnly = true;
+                carroInput.readOnly = true;
+
+            } catch (error) {
+                console.error('Erro ao carregar dados do competidor:', error);
+                resetFormFields();
+            }
+        }
+
+        function resetFormFields() {
+            nomeInput.value = '';
+            rgInput.value = '';
+            cpfInput.value = '';
+            enderecoInput.value = '';
+            cidadeInput.value = '';
+            estadoInput.value = '';
+            telefoneInput.value = '';
+            carroInput.value = '';
+
+            nomeInput.readOnly = false;
+            rgInput.readOnly = false;
+            cpfInput.readOnly = false;
+            enderecoInput.readOnly = false;
+            cidadeInput.readOnly = false;
+            estadoInput.readOnly = false;
+            telefoneInput.readOnly = false;
+            carroInput.readOnly = false;
+        }
+
+        // Event Listeners
         categoriaSelect.addEventListener('change', populateIdSelect);
+        idSelect.addEventListener('change', (e) => {
+            fetchAndPopulateCompetitorData(e.target.value);
+        });
         document.addEventListener('DOMContentLoaded', loadAllAvailableIds);
 
-        document.getElementById('registration-form').addEventListener('submit', async function(event) {
+        form.addEventListener('submit', async function(event) {
             event.preventDefault();
-            const form = event.target;
             const statusMessage = document.getElementById('status-message');
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
+
+            const dataToSend = {
+                ...data,
+                rg: data.rg.replace(/[^\d]/g, ''),
+                cpf: data.cpf.replace(/[^\d]/g, ''),
+                telefone: data.telefone.replace(/[^\d]/g, ''),
+                action: 'inscricao'
+            };
 
             if (!data.nome || !data.rg || !data.cpf || !data.endereco || !data.cidade || !data.estado || !data.telefone || !data.categoria || !data.id || !data.carro) {
                 statusMessage.textContent = "Por favor, preencha todos os campos.";
@@ -232,7 +385,7 @@
             try {
                 const response = await fetch(googleScriptURL, {
                     method: 'POST',
-                    body: JSON.stringify({...data, action: 'inscricao'}),
+                    body: JSON.stringify(dataToSend),
                     headers: {
                         'Content-Type': 'text/plain'
                     }
@@ -243,6 +396,7 @@
                 if (result.status === "success") {
                     statusMessage.textContent = "Inscrição realizada com sucesso!";
                     statusMessage.className = "status-message status-success";
+                    statusMessage.style.display = "block";
                     form.reset();
                     await loadAllAvailableIds();
                 } else {
@@ -252,8 +406,48 @@
                 console.error('Erro no envio:', error);
                 statusMessage.textContent = "Falha no cadastro: " + error.message;
                 statusMessage.className = "status-message status-error";
+                statusMessage.style.display = "block";
             }
         });
+
+        // --- FUNÇÕES DE MÁSCARA ---
+        function applyMask(input, mask) {
+            let value = input.value.replace(/\D/g, '');
+            let formattedValue = '';
+            let k = 0;
+            
+            for (let i = 0; i < mask.length; i++) {
+                if (mask[i] === '#') {
+                    if (value[k]) {
+                        formattedValue += value[k];
+                        k++;
+                    } else {
+                        break;
+                    }
+                } else {
+                    formattedValue += mask[i];
+                }
+            }
+            input.value = formattedValue;
+        }
+        
+        rgInput.addEventListener('input', (e) => {
+            applyMask(e.target, '##.###.###-#');
+        });
+
+        cpfInput.addEventListener('input', (e) => {
+            applyMask(e.target, '###.###.###-##');
+        });
+        
+        telefoneInput.addEventListener('input', (e) => {
+            const value = e.target.value.replace(/\D/g, '');
+            if (value.length > 10) {
+                applyMask(e.target, '(##) #####-####');
+            } else {
+                applyMask(e.target, '(##) ####-####');
+            }
+        });
+        // --- FIM DAS FUNÇÕES DE MÁSCARA ---
     </script>
 </body>
 </html>
