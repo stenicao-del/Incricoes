@@ -267,34 +267,37 @@
         }
 
         function populateIdSelect() {
-            const categoria = categoriaSelect.value;
-            const categoriaPrefixes = {
-                "Aspirado": "ASP",
-                "Turbo": "TUR",
-                "Iniciantes": "INI"
-            };
-            const prefix = categoriaPrefixes[categoria];
+            // Adicionamos um pequeno atraso para garantir que o valor do campo seja atualizado no celular
+            setTimeout(() => {
+                const categoria = categoriaSelect.value;
+                const categoriaPrefixes = {
+                    "Aspirado": "ASP",
+                    "Turbo": "TUR",
+                    "Iniciantes": "INI"
+                };
+                const prefix = categoriaPrefixes[categoria];
 
-            idSelect.innerHTML = '';
-            idSelect.disabled = true;
-            resetFormFields();
+                idSelect.innerHTML = '';
+                idSelect.disabled = true;
+                resetFormFields();
 
-            if (categoria) {
-                const filteredIds = allAvailableIds.filter(id => id.toLowerCase().startsWith(prefix.toLowerCase()));
-                if (filteredIds.length > 0) {
-                    filteredIds.forEach(id => {
-                        const option = document.createElement('option');
-                        option.value = id;
-                        option.textContent = id.toUpperCase();
-                        idSelect.appendChild(option);
-                    });
-                    idSelect.disabled = false;
+                if (categoria) {
+                    const filteredIds = allAvailableIds.filter(id => id.toLowerCase().startsWith(prefix.toLowerCase()));
+                    if (filteredIds.length > 0) {
+                        filteredIds.forEach(id => {
+                            const option = document.createElement('option');
+                            option.value = id;
+                            option.textContent = id.toUpperCase();
+                            idSelect.appendChild(option);
+                        });
+                        idSelect.disabled = false;
+                    } else {
+                        idSelect.innerHTML = '<option value="">Nenhum Código Disponível</option>';
+                    }
                 } else {
-                    idSelect.innerHTML = '<option value="">Nenhum Código Disponível</option>';
+                    idSelect.innerHTML = '<option value="">Selecione a Categoria Primeiro</option>';
                 }
-            } else {
-                idSelect.innerHTML = '<option value="">Selecione a Categoria Primeiro</option>';
-            }
+            }, 100); // Atraso de 100 milissegundos
         }
 
         async function fetchAndPopulateCompetitorData(id) {
