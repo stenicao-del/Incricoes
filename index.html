@@ -274,7 +274,7 @@
                 const categoriaPrefixes = {
                     "Aspirado": "ASP",
                     "Turbo": "TUR",
-                    "Iniciantes": "INI"
+                    "Iniciantes": "INI",
                     "Feminino": "FEM"
                 };
                 const prefix = categoriaPrefixes[categoria];
@@ -286,6 +286,11 @@
                 if (categoria) {
                     const filteredIds = allAvailableIds.filter(id => id.toLowerCase().startsWith(prefix.toLowerCase()));
                     if (filteredIds.length > 0) {
+                        const placeholderOption = document.createElement('option');
+                        placeholderOption.value = "";
+                        placeholderOption.textContent = "Selecione um Código";
+                        idSelect.appendChild(placeholderOption);
+
                         filteredIds.forEach(id => {
                             const option = document.createElement('option');
                             option.value = id;
@@ -459,5 +464,3 @@
     </script>
 </body>
 </html>
-
-
