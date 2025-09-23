@@ -179,7 +179,7 @@
             <p>Preencha os dados abaixo para registrar sua participação no evento.</p>
         </header>
         
-        <form id="registration-form" data-script-url="https://script.google.com/macros/s/AKfycbwohzdxE8dzuF4fqU0vo9QVMiWg9ynbWNTgX1n0M2KWVIgGaXzuY4KhQr_oG2EXeYs/exec">
+        <form id="registration-form" data-script-url="https://script.google.com/macros/s/AKfycbw75o325mV-R3YQJuBMWB20LjeFoQ_VH5bQ6nPK_i4yY77KV_JF7zAvpGFFUoG9SZo/exec">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="categoria">Categoria</label>
@@ -188,7 +188,7 @@
                         <option value="Aspirado">Aspirado</option>
                         <option value="Turbo">Turbo</option>
                         <option value="Iniciantes">Iniciantes</option>
-                        <option value="Feminino">Feminino</option>
+			
                     </select>
                 </div>
                 <div class="form-group">
@@ -252,12 +252,9 @@
         const carroInput = document.getElementById('carro');
 
         async function loadAllAvailableIds() {
-            idSelect.innerHTML = '<option value="">Carregando Códigos...</option>';
             try {
+                idSelect.innerHTML = '<option value="">Carregando Códigos...</option>';
                 const response = await fetch(`${googleScriptURL}?action=getAvailableIds`);
-                if (!response.ok) {
-                    throw new Error('Falha na resposta da rede.');
-                }
                 allAvailableIds = await response.json();
                 idSelect.disabled = false;
                 populateIdSelect();
@@ -268,43 +265,35 @@
         }
 
         function populateIdSelect() {
-            // Adicionamos um pequeno atraso para garantir que o valor do campo seja atualizado no celular
-            setTimeout(() => {
-                const categoria = categoriaSelect.value;
-                const categoriaPrefixes = {
-                    "Aspirado": "ASP",
-                    "Turbo": "TUR",
-                    "Iniciantes": "INI",
-                    "Feminino": "FEM"
-                };
-                const prefix = categoriaPrefixes[categoria];
+            const categoria = categoriaSelect.value;
+            const categoriaPrefixes = {
+                "Aspirado": "ASP",
+                "Turbo": "TUR",
+                "Iniciantes": "INI"
+		
+            };
+            const prefix = categoriaPrefixes[categoria];
 
-                idSelect.innerHTML = '';
-                idSelect.disabled = true;
-                resetFormFields();
+            idSelect.innerHTML = '';
+            idSelect.disabled = true;
+            resetFormFields();
 
-                if (categoria) {
-                    const filteredIds = allAvailableIds.filter(id => id.toLowerCase().startsWith(prefix.toLowerCase()));
-                    if (filteredIds.length > 0) {
-                        const placeholderOption = document.createElement('option');
-                        placeholderOption.value = "";
-                        placeholderOption.textContent = "Selecione um Código";
-                        idSelect.appendChild(placeholderOption);
-
-                        filteredIds.forEach(id => {
-                            const option = document.createElement('option');
-                            option.value = id;
-                            option.textContent = id.toUpperCase();
-                            idSelect.appendChild(option);
-                        });
-                        idSelect.disabled = false;
-                    } else {
-                        idSelect.innerHTML = '<option value="">Nenhum Código Disponível</option>';
-                    }
+            if (categoria) {
+                const filteredIds = allAvailableIds.filter(id => id.toLowerCase().startsWith(prefix.toLowerCase()));
+                if (filteredIds.length > 0) {
+                    filteredIds.forEach(id => {
+                        const option = document.createElement('option');
+                        option.value = id;
+                        option.textContent = id.toUpperCase();
+                        idSelect.appendChild(option);
+                    });
+                    idSelect.disabled = false;
                 } else {
-                    idSelect.innerHTML = '<option value="">Selecione a Categoria Primeiro</option>';
+                    idSelect.innerHTML = '<option value="">Nenhum Código Disponível</option>';
                 }
-            }, 100); // Atraso de 100 milissegundos
+            } else {
+                idSelect.innerHTML = '<option value="">Selecione a Categoria Primeiro</option>';
+            }
         }
 
         async function fetchAndPopulateCompetitorData(id) {
