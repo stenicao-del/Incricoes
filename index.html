@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://script.google.com/macros/s/AKfycbzBw6IzL-_fh1LJmdutUvE-Wnv8XHrsm2AYWoVA1sAaVRq-yrsk-sSZsokhUIesIng/exec">
     <style>
         :root {
             --primary-color: #007bff;
@@ -188,7 +189,7 @@
                         <option value="Aspirado">Aspirado</option>
                         <option value="Turbo">Turbo</option>
                         <option value="Iniciantes">Iniciantes</option>
-			
+                        <option value="Feminina">Feminina</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -266,20 +267,26 @@
 
         function populateIdSelect() {
             const categoria = categoriaSelect.value;
+            // ALTERAÇÃO AQUI: Adição do prefixo 'FEM' para a categoria 'Feminina'
             const categoriaPrefixes = {
                 "Aspirado": "ASP",
                 "Turbo": "TUR",
-                "Iniciantes": "INI"
-		
+                "Iniciantes": "INI",
+                "Feminina": "FEM",
             };
             const prefix = categoriaPrefixes[categoria];
-
+            
             idSelect.innerHTML = '';
             idSelect.disabled = true;
-            resetFormFields();
 
             if (categoria) {
-                const filteredIds = allAvailableIds.filter(id => id.toLowerCase().startsWith(prefix.toLowerCase()));
+                const filteredIds = allAvailableIds.filter(id => id.toUpperCase().startsWith(prefix.toUpperCase()));
+                
+                const placeholderOption = document.createElement('option');
+                placeholderOption.value = "";
+                placeholderOption.textContent = filteredIds.length > 0 ? "Selecione um Código" : "Nenhum Código Disponível";
+                idSelect.appendChild(placeholderOption);
+
                 if (filteredIds.length > 0) {
                     filteredIds.forEach(id => {
                         const option = document.createElement('option');
@@ -288,8 +295,6 @@
                         idSelect.appendChild(option);
                     });
                     idSelect.disabled = false;
-                } else {
-                    idSelect.innerHTML = '<option value="">Nenhum Código Disponível</option>';
                 }
             } else {
                 idSelect.innerHTML = '<option value="">Selecione a Categoria Primeiro</option>';
@@ -311,14 +316,14 @@
                     return;
                 }
                 
-                nomeInput.value = data.nome_competidor;
-                rgInput.value = data.rg;
-                cpfInput.value = data.cpf;
-                enderecoInput.value = data.endereco;
-                cidadeInput.value = data.cidade;
-                estadoInput.value = data.estado;
-                telefoneInput.value = data.telefone_whatsapp;
-                carroInput.value = data.carro;
+                nomeInput.value = data.nome || '';
+                rgInput.value = data.rg || '';
+                cpfInput.value = data.cpf || '';
+                enderecoInput.value = data.endereco || '';
+                cidadeInput.value = data.cidade || '';
+                estadoInput.value = data.estado || '';
+                telefoneInput.value = data.telefone || '';
+                carroInput.value = data.carro || '';
                 
                 nomeInput.readOnly = true;
                 rgInput.readOnly = true;
@@ -355,10 +360,15 @@
             carroInput.readOnly = false;
         }
 
-        categoriaSelect.addEventListener('change', populateIdSelect);
+        // A CORREÇÃO ESTÁ AQUI: REMOVIDA A CHAMADA PARA resetFormFields()
+        categoriaSelect.addEventListener('change', () => {
+            populateIdSelect();
+        });
+
         idSelect.addEventListener('change', (e) => {
             fetchAndPopulateCompetitorData(e.target.value);
         });
+        
         document.addEventListener('DOMContentLoaded', loadAllAvailableIds);
 
         form.addEventListener('submit', async function(event) {
