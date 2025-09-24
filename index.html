@@ -6,8 +6,7 @@
     <title>Inscrição de Competidor - Capivara Clube</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link href="https://script.google.com/macros/s/AKfycbzIVgA-CgIhVMU1zkC0yuxlbzT1deNVwR2BO92XoGLjNr1BU7cmq3sPX1AzG96D6Sk/exec">
+    <link href="https://script.google.com/macros/s/AKfycbymicG9JAcYpL3qKF4KiP1Iow_x_BtfZUihC8vg_6ZDR6paUY5OuB6m4BtPPSKhlR0/exec">
     <style>
         :root {
             --primary-color: #007bff;
@@ -180,7 +179,7 @@
             <p>Preencha os dados abaixo para registrar sua participação no evento.</p>
         </header>
         
-        <form id="registration-form" data-script-url="https://script.google.com/macros/s/AKfycbzIVgA-CgIhVMU1zkC0yuxlbzT1deNVwR2BO92XoGLjNr1BU7cmq3sPX1AzG96D6Sk/exec">
+        <form id="registration-form" data-script-url="https://script.google.com/macros/s/AKfycbymicG9JAcYpL3qKF4KiP1Iow_x_BtfZUihC8vg_6ZDR6paUY5OuB6m4BtPPSKhlR0/exec">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="categoria">Categoria</label>
@@ -256,31 +255,40 @@
             try {
                 idSelect.innerHTML = '<option value="">Carregando Códigos...</option>';
                 const response = await fetch(`${googleScriptURL}?action=getAvailableIds`);
-                allAvailableIds = await response.json();
-                idSelect.disabled = false;
-                populateIdSelect();
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    allAvailableIds = result.availableIds;
+                    idSelect.disabled = false;
+                    populateIdSelect();
+                } else {
+                    console.error('Erro ao carregar IDs:', result.message);
+                    idSelect.innerHTML = '<option value="">Erro ao carregar IDs</option>';
+                }
             } catch (error) {
-                console.error('Erro ao carregar IDs:', error);
-                idSelect.innerHTML = '<option value="">Erro ao carregar IDs</option>';
+                console.error('Erro de conexão ao carregar IDs:', error);
+                idSelect.innerHTML = '<option value="">Erro de conexão</option>';
             }
         }
 
         function populateIdSelect() {
             const categoria = categoriaSelect.value;
-            // ALTERAÇÃO AQUI: Adição do prefixo 'FEM' para a categoria 'Feminina'
+            // AQUI ESTÁ A CORREÇÃO PRINCIPAL: Alinhar prefixos com o Apps Script
             const categoriaPrefixes = {
-                "Aspirado": "ASP",
-                "Turbo": "TUR",
-                "Iniciantes": "INI",
-                "Feminina": "FEM",
+                "Aspirado": "asp",
+                "Turbo": "tur",
+                "Iniciantes": "ini",
+                "Feminina": "fem",
             };
             const prefix = categoriaPrefixes[categoria];
             
             idSelect.innerHTML = '';
             idSelect.disabled = true;
+            resetFormFields();
 
             if (categoria) {
-                const filteredIds = allAvailableIds.filter(id => id.toUpperCase().startsWith(prefix.toUpperCase()));
+                // Filtra a lista completa de IDs (em minúsculas)
+                const filteredIds = allAvailableIds.filter(id => id.startsWith(prefix));
                 
                 const placeholderOption = document.createElement('option');
                 placeholderOption.value = "";
@@ -302,38 +310,38 @@
         }
 
         async function fetchAndPopulateCompetitorData(id) {
+            resetFormFields();
+            
             if (!id) {
-                resetFormFields();
                 return;
             }
+
             try {
                 const response = await fetch(`${googleScriptURL}?action=getCompetitorData&id=${id}`);
                 const data = await response.json();
 
-                if (data.status === "error") {
+                if (data.status === "success") {
+                    nomeInput.value = data.nome || '';
+                    rgInput.value = data.rg || '';
+                    cpfInput.value = data.cpf || '';
+                    enderecoInput.value = data.endereco || '';
+                    cidadeInput.value = data.cidade || '';
+                    estadoInput.value = data.estado || '';
+                    telefoneInput.value = data.telefone || '';
+                    carroInput.value = data.carro || '';
+                    
+                    nomeInput.readOnly = true;
+                    rgInput.readOnly = true;
+                    cpfInput.readOnly = true;
+                    enderecoInput.readOnly = true;
+                    cidadeInput.readOnly = true;
+                    estadoInput.readOnly = true;
+                    telefoneInput.readOnly = true;
+                    carroInput.readOnly = true;
+                } else if (data.status === "error") {
                     console.error('Erro ao buscar dados do competidor:', data.message);
                     resetFormFields();
-                    return;
                 }
-                
-                nomeInput.value = data.nome || '';
-                rgInput.value = data.rg || '';
-                cpfInput.value = data.cpf || '';
-                enderecoInput.value = data.endereco || '';
-                cidadeInput.value = data.cidade || '';
-                estadoInput.value = data.estado || '';
-                telefoneInput.value = data.telefone || '';
-                carroInput.value = data.carro || '';
-                
-                nomeInput.readOnly = true;
-                rgInput.readOnly = true;
-                cpfInput.readOnly = true;
-                enderecoInput.readOnly = true;
-                cidadeInput.readOnly = true;
-                estadoInput.readOnly = true;
-                telefoneInput.readOnly = true;
-                carroInput.readOnly = true;
-
             } catch (error) {
                 console.error('Erro ao carregar dados do competidor:', error);
                 resetFormFields();
@@ -360,7 +368,6 @@
             carroInput.readOnly = false;
         }
 
-        // A CORREÇÃO ESTÁ AQUI: REMOVIDA A CHAMADA PARA resetFormFields()
         categoriaSelect.addEventListener('change', () => {
             populateIdSelect();
         });
@@ -374,18 +381,24 @@
         form.addEventListener('submit', async function(event) {
             event.preventDefault();
             const statusMessage = document.getElementById('status-message');
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
-
+            
             const dataToSend = {
-                ...data,
-                rg: data.rg.replace(/[^\d]/g, ''),
-                cpf: data.cpf.replace(/[^\d]/g, ''),
-                telefone: data.telefone.replace(/[^\d]/g, ''),
-                action: 'inscricao'
+                action: 'inscricao',
+                categoria: categoriaSelect.value,
+                id: idSelect.value,
+                nome: nomeInput.value,
+                carro: carroInput.value,
+                rg: rgInput.value.replace(/[^\d]/g, ''),
+                cpf: cpfInput.value.replace(/[^\d]/g, ''),
+                telefone: telefoneInput.value.replace(/[^\d]/g, ''),
+                endereco: enderecoInput.value,
+                cidade: cidadeInput.value,
+                estado: estadoInput.value,
             };
 
-            if (!data.nome || !data.rg || !data.cpf || !data.endereco || !data.cidade || !data.estado || !data.telefone || !data.categoria || !data.id || !data.carro) {
+            const requiredFields = [dataToSend.categoria, dataToSend.id, dataToSend.nome, dataToSend.carro, dataToSend.rg, dataToSend.cpf, dataToSend.telefone, dataToSend.endereco, dataToSend.cidade, dataToSend.estado];
+            
+            if (requiredFields.some(field => !field)) {
                 statusMessage.textContent = "Por favor, preencha todos os campos.";
                 statusMessage.className = "status-message status-error";
                 statusMessage.style.display = "block";
@@ -412,6 +425,7 @@
                     statusMessage.className = "status-message status-success";
                     statusMessage.style.display = "block";
                     form.reset();
+                    // Recarrega a lista de IDs após o envio bem-sucedido
                     await loadAllAvailableIds();
                 } else {
                     throw new Error(result.message || "Erro no servidor.");
@@ -445,19 +459,25 @@
         }
         
         rgInput.addEventListener('input', (e) => {
-            applyMask(e.target, '##.###.###-#');
+            if (!e.target.readOnly) {
+                applyMask(e.target, '##.###.###-#');
+            }
         });
 
         cpfInput.addEventListener('input', (e) => {
-            applyMask(e.target, '###.###.###-##');
+            if (!e.target.readOnly) {
+                applyMask(e.target, '###.###.###-##');
+            }
         });
         
         telefoneInput.addEventListener('input', (e) => {
-            const value = e.target.value.replace(/\D/g, '');
-            if (value.length > 10) {
-                applyMask(e.target, '(##) #####-####');
-            } else {
-                applyMask(e.target, '(##) ####-####');
+            if (!e.target.readOnly) {
+                const value = e.target.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    applyMask(e.target, '(##) #####-####');
+                } else {
+                    applyMask(e.target, '(##) ####-####');
+                }
             }
         });
     </script>
